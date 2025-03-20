@@ -4,7 +4,8 @@
 INSERT INTO users (name, email, password, role)
 VALUES 
   ('John Doe', 'john@example.com', 'hashedpassword123', 'user'),
-  ('Jane Smith', 'jane@example.com', 'hashedpassword456', 'restaurant');
+  ('Jane Smith', 'jane@example.com', 'hashedpassword456', 'restaurant'),;
+  ('Admin', 'Admin@example.com', 'hashedpassword789', 'admin');
 
 -- Insert test data into restaurants table
 INSERT INTO restaurants (user_id, name, location, logo, description)
