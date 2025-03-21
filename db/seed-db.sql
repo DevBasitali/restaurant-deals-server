@@ -1,38 +1,40 @@
--- seeddb.sql
+-- Insert Users
+INSERT INTO users (name, email, password, role) VALUES
+('Admin User', 'admin@foodypand.com', 'hashedpassword', 'admin'),
+('John Doe', 'johndoe@foodypand.com', 'hashedpassword', 'restaurant'),
+('Jane Smith', 'janesmith@foodypand.com', 'hashedpassword', 'user');
 
--- Insert test data into users table
-INSERT INTO users (name, email, password, role)
-VALUES 
-  ('John Doe', 'john@example.com', 'hashedpassword123', 'user'),
-  ('Jane Smith', 'jane@example.com', 'hashedpassword456', 'restaurant'),;
-  ('Admin', 'Admin@example.com', 'hashedpassword789', 'admin');
+-- Insert Restaurants
+INSERT INTO restaurants (name, description, address, owner_id, subscription_plan) VALUES
+('Doe’s Diner', 'A cozy family diner.', '123 Main Street', 2, 'Pro'),
+('Smith’s Eatery', 'A trendy modern cafe.', '456 Oak Avenue', 2, 'Basic');
 
--- Insert test data into restaurants table
-INSERT INTO restaurants (user_id, name, location, logo, description)
-VALUES 
-  (2, 'Pizza Palace', '123 Pizza Street', 'https://example.com/logo1.png', 'Best pizza in town.'),
-  (2, 'Burger Bonanza', '456 Burger Avenue', 'https://example.com/logo2.png', 'Amazing burgers.');
+-- Insert Deals
+INSERT INTO deals (restaurant_id, title, description, price, deal_type, start_time, end_time) VALUES
+(1, 'Breakfast Special', 'Get 20% off our breakfast menu', 5.99, 'daily', '2025-03-20 08:00:00', '2025-03-20 11:00:00'),
+(1, 'Weekend Dinner Combo', 'Buy 1 get 1 free on selected dinner items', 15.99, 'weekly', '2025-03-21 18:00:00', '2025-03-21 22:00:00'),
+(2, 'Lunch Discount', 'Enjoy 10% off all lunch items', 7.99, 'daily', '2025-03-19 12:00:00', '2025-03-19 14:00:00');
 
--- Insert test data into deals table
-INSERT INTO deals (restaurant_id, title, description, price, type, image, validity_start, validity_end)
-VALUES 
-  (1, '50% Off Large Pizzas', 'Get half off large pizzas this weekend only!', 9.99, 'weekly', 'https://example.com/pizza.png', '2025-03-15', '2025-03-21'),
-  (2, 'Buy 1 Get 1 Free Burger', 'Get a free burger with every burger you purchase.', 7.99, 'daily', 'https://example.com/burger.png', '2025-03-16', '2025-03-16');
+-- Insert Bids
+INSERT INTO bids (restaurant_id, deal_id, bid_amount) VALUES
+(1, 1, 50.00),
+(2, 3, 35.00);
 
--- Insert test data into bids table
-INSERT INTO bids (restaurant_id, amount)
-VALUES 
-  (1, 50.00), -- Pizza Palace places a bid
-  (2, 75.00); -- Burger Bonanza places a higher bid
+-- Insert Subscriptions
+INSERT INTO subscriptions (restaurant_id, plan, start_date, end_date) VALUES
+(1, 'Pro', '2025-03-01 00:00:00', '2025-06-01 00:00:00'),
+(2, 'Basic', '2025-03-01 00:00:00', '2025-06-01 00:00:00');
 
--- Insert test data into reviews table
-INSERT INTO reviews (user_id, deal_id, rating, comment)
-VALUES 
-  (1, 1, 5, 'Best pizza deal ever!'),
-  (1, 2, 4, 'Good burger, but service was slow.');
+-- Insert Flash Deals
+INSERT INTO flash_deals (deal_id, discount_percentage, start_time, end_time) VALUES
+(1, 30.00, '2025-03-20 10:00:00', '2025-03-20 11:00:00');
 
--- Insert test data into redemptions table
-INSERT INTO redemptions (user_id, deal_id, redeemed_at)
-VALUES 
-  (1, 1, CURRENT_TIMESTAMP),
-  (1, 2, CURRENT_TIMESTAMP);
+-- Insert Reviews
+INSERT INTO reviews (user_id, deal_id, rating, review_text) VALUES
+(3, 1, 4, 'The breakfast was delicious and the discount made it even better!'),
+(3, 3, 5, 'Great value for a tasty lunch.');
+
+-- Insert Admin Management Actions
+INSERT INTO admin_management (admin_id, action, target_id, target_type) VALUES
+(1, 'Approved restaurant Doe’s Diner', 1, 'restaurant'),
+(1, 'Banned restaurant Smith’s Eatery', 2, 'restaurant');
