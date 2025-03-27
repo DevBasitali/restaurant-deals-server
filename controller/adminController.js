@@ -1,41 +1,95 @@
-const Restaurant = require('../models/userModel');
+const Restaurant = require('../models/restaurantModel');
+const User = require('../models/userModel');
 
-// Approve restaurant by admin
+// Approve a restaurant (this will approve the user as well)
 exports.approveRestaurant = async (req, res) => {
-    const { restaurantId } = req.params;
-    try {
-        const restaurant = await Restaurant.findByIdAndUpdate(restaurantId, { status: "approved" });
-        if (!restaurant) {
-            return res.status(404).send('Restaurant not found.');
-        }
-        res.send('Restaurant approved successfully!');
-        // Optionally send an email to the restaurant owner notifying them of approval
-    } catch (error) {
-        res.status(500).send('Error approving restaurant.');
+  try {
+    const { id } = req.params; // Restaurant ID
+
+    // Find the restaurant by ID
+    const restaurant = await Restaurant.findById(id);
+    if (!restaurant) {
+      return res.status(404).json({ message: 'Restaurant not found' });
     }
+
+    // Find the owner (user) of the restaurant
+    const user = await User.findById(restaurant.ownerid);
+    if (!user) {
+      return res.status(404).json({ message: 'Owner not found' });
+    }
+
+    // Approve the user (owner)
+    const approvedUser = await User.approveUser(user.id);
+
+    return res.status(200).json({
+      message: 'Restaurant approved successfully',
+      restaurant,
+      userApprovalStatus: approvedUser.approvalstatus // Show the updated approval status
+    });
+  } catch (err) {
+    return res.status(500).json({ message: 'Error approving restaurant', error: err.message });
+  }
 };
 
-// Reject restaurant by admin
+// Reject a restaurant (this will update the user's approval status to "rejected")
 exports.rejectRestaurant = async (req, res) => {
-    const { restaurantId } = req.params;
-    try {
-        const restaurant = await Restaurant.findByIdAndUpdate(restaurantId, { status: "rejected" });
-        if (!restaurant) {
-            return res.status(404).send('Restaurant not found.');
-        }
-        res.send('Restaurant rejected.');
-        // Optionally send an email to the restaurant owner notifying them of rejection
-    } catch (error) {
-        res.status(500).send('Error rejecting restaurant.');
+  try {
+    const { id } = req.params;
+
+    // Find the restaurant by ID
+    const restaurant = await Restaurant.findById(id);
+    if (!restaurant) {
+      return res.status(404).json({ message: 'Restaurant not found' });
     }
+
+    // Find the owner (user) of the restaurant
+    const user = await User.findById(restaurant.ownerid);
+    if (!user) {
+      return res.status(404).json({ message: 'Owner not found' });
+    }
+
+    // Reject the user (owner)
+    const rejectedUser = await User.rejectUser(user.id);
+
+    return res.status(200).json({
+      message: 'Restaurant rejected successfully',
+      restaurant,
+      userApprovalStatus: rejectedUser.approvalstatus // Show the updated approval status
+    });
+  } catch (err) {
+    return res.status(500).json({ message: 'Error rejecting restaurant', error: err.message });
+  }
 };
 
-// Get all pending restaurants
-exports.getPendingRestaurants = async (req, res) => {
-    try {
-        const pendingRestaurants = await Restaurant.find({ status: "pending" });
-        res.status(200).json(pendingRestaurants);
-    } catch (error) {
-        res.status(500).send('Error fetching pending restaurants.');
+// Ban a restaurant (this does not affect the user, only the restaurant's status)
+exports.banRestaurant = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Ban the restaurant
+    const bannedRestaurant = await Restaurant.banRestaurant(id);
+    if (!bannedRestaurant) {
+      return res.status(404).json({ message: 'Restaurant not found' });
     }
+
+    return res.status(200).json({
+      message: 'Restaurant banned successfully',
+      restaurant: bannedRestaurant
+    });
+  } catch (err) {
+    return res.status(500).json({ message: 'Error banning restaurant', error: err.message });
+  }
+};
+
+// View all restaurant details
+exports.getAllRestaurants = async (req, res) => {
+  try {
+    const restaurants = await Restaurant.findAll();
+    return res.status(200).json({
+      message: 'Restaurants fetched successfully',
+      restaurants
+    });
+  } catch (err) {
+    return res.status(500).json({ message: 'Error fetching restaurants', error: err.message });
+  }
 };

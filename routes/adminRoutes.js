@@ -1,14 +1,18 @@
 const express = require('express');
 const router = express.Router();
-const verifyToken = require('../middleware/authMiddleware');
-const adminController = require ("../controller/adminController")
+const adminController = require('../controller/adminController');
+const verifyAdmin = require ('../middleware/adminVerify');
 
-router.get('/approve/:restaurantId', adminController.approveRestaurant);
+// Approve a restaurant
+router.put('/approve-restaurant/:id', adminController.approveRestaurant);
 
-// Admin rejection of restaurant
-router.get('/reject/:restaurantId',  adminController.rejectRestaurant);
+// Reject a restaurant
+router.put('/reject-restaurant/:id', adminController.rejectRestaurant);
 
-// Fetch all pending restaurants
-router.get('/pending-restaurants', adminController.getPendingRestaurants);
+// Ban a restaurant
+router.put('/ban-restaurant/:id', adminController.banRestaurant);
+
+// View all restaurants
+router.get('/restaurants', adminController.getAllRestaurants);
 
 module.exports = router;

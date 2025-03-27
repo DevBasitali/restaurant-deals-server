@@ -1,21 +1,17 @@
-// middleware/authMiddleware.js
 const jwt = require('jsonwebtoken');
-const dotenv = require('dotenv');
 
-const verifyToken = (req, res, next) => {
+// General auth middleware (for users and admins after login)
+exports.authMiddleware = (req, res, next) => {
   const token = req.header('Authorization');
-
   if (!token) {
-    return res.status(401).json({ error: 'No token, authorization denied' });
+    return res.status(401).json({ message: 'No token, authorization denied' });
   }
 
   try {
-    const verified = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = verified;
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = decoded; // Attach user info to the request
     next();
   } catch (err) {
-    res.status(400).json({ error: 'Invalid token' });
+    return res.status(401).json({ message: 'Token is not valid' });
   }
 };
-
-module.exports = verifyToken;
