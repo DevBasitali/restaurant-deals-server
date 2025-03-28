@@ -5,7 +5,7 @@ exports.createRestaurant = async (req, res) => {
     const { name, description, address, subscriptionplan } = req.body;
     
     // Make sure only approved restaurant owners can create restaurants
-    if (req.user.role !== "restaurant_owner" || req.user.approval_status !== "approved") {
+    if (req.user.role !== "restaurant_owner" || req.user.approvalstatus !== "approved") {
       return res.status(403).json({ message: "Your account must be approved to create a restaurant" });
     }
 

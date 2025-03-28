@@ -65,8 +65,12 @@ exports.loginUser = async (req, res) => {
       return res.status(400).json({ message: "Incorrect password" });
     }
 
-    // Generate JWT token
-    const token = jwt.sign({ id: user.id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '1d' });
+    // Generate JWT token and include approval status
+    const token = jwt.sign(
+      { id: user.id, role: user.role, approvalstatus: user.approvalstatus },
+      process.env.JWT_SECRET,
+      { expiresIn: '1d' }
+    );
 
     return res.status(200).json({
       message: "Login successful",

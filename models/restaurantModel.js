@@ -24,14 +24,6 @@ const Restaurant = {
     return result.rows;
   },
 
-  // Ban restaurant (without affecting approvalstatus in users)
-  async banRestaurant(id) {
-    const query = 'UPDATE restaurants SET approvalstatus = $1 WHERE id = $2 RETURNING *';
-    const values = ['banned', id];
-    const result = await pool.query(query, values);
-    return result.rows[0];
-  },
-
   async findByOwner(owner_id) {
     const query = 'SELECT * FROM restaurants WHERE ownerid = $1';
     const result = await pool.query(query, [owner_id]);
