@@ -13,25 +13,15 @@ const User = {
     return result.rows[0];
   },
 
+  async updateApprovalStatus(id, status) {
+    const query = 'UPDATE users SET approvalstatus = $1 WHERE id = $2 RETURNING *';
+    const result = await pool.query(query, [status, id]);
+    return result.rows[0];
+  },
+
   async findByEmail(email) {
     const query = 'SELECT * FROM users WHERE email = $1';
     const result = await pool.query(query, [email]);
-    return result.rows[0];
-  },
-
-  // Approve user (restaurant owner)
-  async approveRestaurant(id) {
-    const query = 'UPDATE users SET approvalstatus = $1 WHERE id = $2 RETURNING *';
-    const values = ['approved', id];
-    const result = await pool.query(query, values);
-    return result.rows[0];
-  },
-
-  // Reject user (restaurant owner)
-  async rejectUser(id) {
-    const query = 'UPDATE users SET approvalstatus = $1 WHERE id = $2 RETURNING *';
-    const values = ['rejected', id];
-    const result = await pool.query(query, values);
     return result.rows[0];
   },
 

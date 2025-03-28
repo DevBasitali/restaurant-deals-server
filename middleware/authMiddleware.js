@@ -15,3 +15,36 @@ exports.authMiddleware = (req, res, next) => {
     return res.status(401).json({ message: 'Token is not valid' });
   }
 };
+
+// Role-based authorization (for user roles)
+exports.authorizeRole = (role) => {
+  return (req, res, next) => {
+    if (req.user && req.user.role === role) {
+      next(); // User is authorized
+    } else {
+      return res.status(403).json({ message: `Access denied: Requires ${role} role` });
+    }
+  };
+};
+
+// Admin-specific middleware
+exports.adminMiddleware = (req, res, next) => {
+  if (req.user && req.user.role === 'admin') {
+    next();
+  } else {
+    return res.status(403).json({ message: 'Access denied, admin only' });
+  }
+};
+
+// Middleware for restaurant owners to check approval status
+exports.approvedRestaurantMiddleware = (req, res, next) => {
+  if (req.user && req.user.role === 'restaurant_owner') {
+    if (req.user.approvalstatus === 'approved') {
+      next(); // User is approved, allow the request
+    } else {
+      return res.status(403).json({ message: 'Your restaurant is pending approval or has been rejected' });
+    }
+  } else {
+    return res.status(403).json({ message: 'Access denied, restaurant owners only' });
+  }
+};

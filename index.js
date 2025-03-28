@@ -2,6 +2,7 @@ const express = require("express");
 const dotenv = require("dotenv");
 const userRoutes = require("./routes/usersRoute");
 const adminRoutes = require('./routes/adminRoutes')
+const restaurantRoutes = require('./routes/restaurantRoutes')
 const errorHandler = require("./middleware/errorHandler");
 const pool = require("./db/db");
 const session = require("express-session");
@@ -25,6 +26,8 @@ app.use(
 
 app.use("/auth", userRoutes);
 app.use('/admin', adminRoutes);
+app.use('/restaurant', restaurantRoutes);
+
 app.use(errorHandler);
 
 

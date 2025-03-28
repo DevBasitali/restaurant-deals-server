@@ -1,36 +1,26 @@
-const Restaurant = require('../models/restaurantModel');
-const jwt = require('jsonwebtoken');
+const Restaurant = require("../models/restaurantModel");
 
-// Create new restaurant after login
 exports.createRestaurant = async (req, res) => {
   try {
-    const { name, address, ownerid, subscriptionplan } = req.body;
-
-    // Validate required fields
-    if (!name || !owner_id || !address || !subscriptionplan) {
-      return res.status(400).json({ message: 'Missing required fields' });
+    const { name, description, address, subscriptionplan } = req.body;
+    
+    // Make sure only approved restaurant owners can create restaurants
+    if (req.user.role !== "restaurant_owner" || req.user.approval_status !== "approved") {
+      return res.status(403).json({ message: "Your account must be approved to create a restaurant" });
     }
 
-    // Verify user authentication and extract owner_id from the JWT token
-    const token = req.headers.authorization.split(" ")[1];
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const owner_id = decoded.id;
-
-    // Save restaurant details
+    // Create the restaurant in the database
     const restaurant = await Restaurant.create({
       name,
-      email,
+      description,
       address,
-      owner_id,
-      subscription_plan
+      ownerid: req.user.id, // This is fetched from the authenticated user
+      subscriptionplan,
     });
 
-    return res.status(201).json({
-      message: 'Restaurant created successfully',
-      restaurant
-    });
-
+    return res.status(201).json({ message: "Restaurant created successfully", restaurant });
   } catch (err) {
-    return res.status(500).json({ message: 'Error creating restaurant', error: err.message });
+    console.error("Error creating restaurant:", err);
+    return res.status(500).json({ message: "Error creating restaurant", error: err.message });
   }
 };
