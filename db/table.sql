@@ -5,7 +5,7 @@ CREATE TABLE users (
     email VARCHAR(150) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
     role VARCHAR(50) CHECK (role IN ('admin', 'restaurant_owner', 'user')) NOT NULL,
-    approvalstatus VARCHAR(50) DEFAULT 'pending',  -- New field added
+    approvalstatus VARCHAR(50) DEFAULT 'pending',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -17,8 +17,12 @@ CREATE TABLE restaurants (
     address VARCHAR(255),
     ownerid INT NOT NULL,
     subscriptionplan VARCHAR(50) CHECK (subscriptionplan IN ('Basic', 'Pro', 'Premium')) DEFAULT 'Basic',
+    latitude FLOAT NOT NULL CHECK (latitude >= -90 AND latitude <= 90) DEFAULT 0,
+    longitude FLOAT NOT NULL CHECK (longitude >= -180 AND longitude <= 180) DEFAULT 0,
+    status VARCHAR(50) NOT NULL CHECK (status IN ('pending', 'approved', 'rejected', 'banned')) DEFAULT 'pending',
     FOREIGN KEY (ownerid) REFERENCES users(id) ON DELETE CASCADE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Deals Table

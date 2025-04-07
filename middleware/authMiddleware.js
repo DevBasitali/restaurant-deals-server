@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+// import jwt from 'jsonwebtoken'
 
 // General auth middleware (for users and admins after login)
 exports.authMiddleware = (req, res, next) => {
