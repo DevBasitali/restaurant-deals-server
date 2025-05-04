@@ -1,9 +1,7 @@
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
-const argon2 = require('argon2')
 const User = require("../models/userModel");
 
-// Register a new user
 exports.registerUser = async (req, res) => {
   try {
     const { name, email, password, role } = req.body;
