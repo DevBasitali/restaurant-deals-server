@@ -13,7 +13,6 @@ router.post('/ban-restaurant-owner/:id', authMiddleware, adminMiddleware, adminC
 
 router.put('/restaurant-owner/:id/unban', authMiddleware, adminMiddleware, adminController.unbanRestaurant_Owner);
 
-
 router.get('/pending-restaurant-owners', authMiddleware, adminMiddleware, adminController.getPendingRestaurantOwners);
 
 // Route to get all approved restaurant owners
