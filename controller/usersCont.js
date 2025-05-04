@@ -58,6 +58,10 @@ exports.loginUser = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
+    if (User.role === 'restaurant_owner' && User.approvalstatus !== 'approved') {
+      return res.status(403).json({ message: `Your account is ${user.approvalstatus}` });
+    }
+
     // Check if the provided password matches the stored plain password
     if (user.password !== password) {
       return res.status(400).json({ message: "Incorrect password" });
