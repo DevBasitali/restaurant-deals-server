@@ -54,10 +54,6 @@ exports.loginUser = async (req, res) => {
   try {
     // Fetch user by email
     const user = await User.findByEmail(email);
-
-    if (user.role === 'restaurant_owner' && user.approvalstatus !== 'approved') {
-      return res.status(403).json({ message: `Your account is ${user.approvalstatus}` });
-    }
     
     if (!user) {
       return res.status(404).json({ message: "User not found!!!" });
