@@ -1,4 +1,5 @@
 const pool = require('../db/db');
+console.log('Is pool connected:', !!pool);
 const bcrypt = require('bcrypt')
 
 const User = {
@@ -14,9 +15,16 @@ const User = {
     return result.rows[0];
   },
 
+  // async findByEmail(email) {
+  //   const query = 'SELECT * FROM users WHERE email = $1';
+  //   const result = await pool.query(query, [email]);
+  //   return result.rows[0];
+  // },
+
   async findByEmail(email) {
-    const query = 'SELECT * FROM users WHERE email = $1';
+    const query = 'SELECT * FROM users WHERE LOWER(email) = LOWER($1)';
     const result = await pool.query(query, [email]);
+    console.log('Query result:', result.rows);
     return result.rows[0];
   },
 

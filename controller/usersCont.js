@@ -54,6 +54,7 @@ exports.loginUser = async (req, res) => {
   try {
     // Fetch user by email
     const user = await User.findByEmail(email);
+    console.log(user);
     
     if (!user) {
       return res.status(404).json({ message: "User not found!!!" });
