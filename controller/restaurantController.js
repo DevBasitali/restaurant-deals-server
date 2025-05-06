@@ -1,42 +1,5 @@
 const Restaurant = require("../models/restaurantModel");
 
-// exports.createRestaurant = async (req, res) => {
-//   try {
-//     const { name, description, latitude, longitude, address, subscriptionplan } = req.body;
-
-//     // Check if user is an approved restaurant owner
-//     if (req.user.role !== 'restaurant_owner' || req.user.approvalstatus !== 'approved') {
-//       return res.status(403).json({ message: 'Your account must be approved to create a restaurant' });
-//     }
-
-//     // Validate latitude and longitude
-//     if (!latitude || !longitude || latitude < -90 || latitude > 90 || longitude < -180 || longitude > 180) {
-//       return res.status(400).json({ message: 'Invalid or missing coordinates' });
-//     }
-
-//     // Ensure required fields are present
-//     if (!name || !description || !address || !subscriptionplan || !latitude || !longitude){
-//       return res.status(400).json({ message: 'Fields required required' });
-//     }
-
-//     // Create the restaurant in the database
-//     const restaurant = await Restaurant.create({
-//       name,
-//       description, // Optional
-//       address,     // Optional
-//       latitude,
-//       longitude,
-//       ownerid: req.user.id, // From JWT token
-//       subscriptionplan, // Optional
-//       status: 'pending', // Default status per your module
-//     });
-
-//     return res.status(201).json({ message: 'Restaurant created successfully', restaurant });
-//   } catch (err) {
-//     console.error('Error creating restaurant:', err);
-//     return res.status(500).json({ message: 'Error creating restaurant', error: err.message });
-//   }
-// };
 
 exports.createRestaurant = async (req, res) => {
   try {
@@ -45,6 +8,7 @@ exports.createRestaurant = async (req, res) => {
     if (req.user.role !== 'restaurant_owner' || req.user.approvalstatus !== 'approved') {
       return res.status(403).json({ message: 'Your account must be approved to create a restaurant' });
     }
+
 
     if (!latitude || !longitude || latitude < -90 || latitude > 90 || longitude < -180 || longitude > 180) {
       return res.status(400).json({ message: 'Invalid or missing coordinates' });

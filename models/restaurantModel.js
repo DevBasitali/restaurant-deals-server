@@ -52,6 +52,7 @@ const Restaurant = {
   //   const result = await pool.query(query, [id, ownerid]);
   //   return result.rows[0];
   // },
+  
 
   async updateRestaurant(id, ownerid, { name, description, address, latitude, longitude, subscriptionplan }) {
     const query = `
