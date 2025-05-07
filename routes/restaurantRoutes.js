@@ -9,7 +9,8 @@ router.put('/update-restaurant/:id', authMiddleware, approvedRestaurantMiddlewar
 router.delete('/deactivate-restaurant/:id', authMiddleware, approvedRestaurantMiddleware, restaurantController.deactivateRestaurant);
 
 // --subscription Plan routes
-router.post('/subscribe-subscription', authMiddleware, approvedRestaurantMiddleware, restaurantController.subscribeRestaurant);
+router.post('/subscribe-restaurant', authMiddleware, approvedRestaurantMiddleware, restaurantController.subscribeRestaurant);
+router.get('/restaurants/:restaurantId/current-subscription', authMiddleware, approvedRestaurantMiddleware, restaurantController.getCurrentSubscription);
 
 
 module.exports = router;

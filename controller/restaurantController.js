@@ -139,3 +139,29 @@ exports.subscribeRestaurant = async (req, res) => {
   }
 };
 
+// controllers/subscriptionController.js
+
+exports.getCurrentSubscription = async (req, res) => {
+  const { restaurantId } = req.params;
+  const ownerId = req.user.id;  // from auth middleware
+
+  try {
+    // Verify restaurant exists and belongs to owner
+    const restaurant = await Restaurant.findByIdAndOwner(restaurantId, ownerId);
+
+    if (!restaurant) {
+      return res.status(404).json({ message: 'Restaurant not found for this owner' });
+    }
+
+    res.status(200).json({
+      restaurantId: restaurant.id,
+      subscriptionPlan: restaurant.subscriptionplan,
+    });
+
+  } catch (error) {
+    console.error('Error fetching subscription:', error);
+    res.status(500).json({ message: 'Error fetching subscription', error });
+  }
+};
+
+

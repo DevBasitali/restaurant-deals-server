@@ -1,4 +1,5 @@
 const pool = require('../db/db');
+const { subscribe } = require('../routes/restaurantRoutes');
 
 const Restaurant = {
   async create({ name, description, address, latitude, longitude, ownerid, subscriptionplan, ownerApprovalStatus }) {
@@ -11,33 +12,6 @@ const Restaurant = {
     const values = [name, description, address, latitude, longitude, ownerid, subscriptionplan || 'Basic', status];
     const result = await pool.query(query, values);
     return result.rows[0];
-  },
-
-  async updateSubscriptionPlan(restaurantId, newPlan) {
-    const query = `
-      UPDATE restaurants
-      SET subscriptionplan = $1
-      WHERE id = $2
-      RETURNING *;
-    `;
-    const result = await pool.query(query, [newPlan, restaurantId]);
-    return result.rows[0];
-  },
-  
-  async getRestaurantById(id, ownerid) {
-    const query = `
-      SELECT id, name, description, address, latitude, longitude, ownerid, subscriptionplan, status, created_at, updated_at 
-      FROM restaurants 
-      WHERE id = $1 AND ownerid = $2
-    `;
-    const result = await pool.query(query, [id, ownerid]);
-    return result.rows[0];
-  },
-
-  async findAll() {
-    const query = 'SELECT * FROM restaurants';
-    const result = await pool.query(query);
-    return result.rows;
   },
 
   async findById(id) {
@@ -56,6 +30,24 @@ const Restaurant = {
     const query = 'SELECT * FROM restaurants WHERE id = $1 AND ownerid = $2';
     const result = await pool.query(query, [restaurantId, ownerId]);
     return result.rows[0];
+  },
+
+  // --restaurant API's
+  
+  async getRestaurantById(id, ownerid) {
+    const query = `
+      SELECT id, name, description, address, latitude, longitude, ownerid, subscriptionplan, status, created_at, updated_at 
+      FROM restaurants 
+      WHERE id = $1 AND ownerid = $2
+    `;
+    const result = await pool.query(query, [id, ownerid]);
+    return result.rows[0];
+  },
+
+  async findAll() {
+    const query = 'SELECT * FROM restaurants';
+    const result = await pool.query(query);
+    return result.rows;
   },
   
   async updateRestaurant(id, ownerid, { name, description, address, latitude, longitude, subscriptionplan }) {
@@ -85,7 +77,22 @@ const Restaurant = {
     `;
     const result = await pool.query(query, [id, ownerid]);
     return result.rows[0];
-  }
+  }, 
+
+  // --subscribe API's
+async updateSubscriptionPlan(restaurantId, newPlan) {
+  const query = `
+    UPDATE restaurants
+    SET subscriptionplan = $1
+    WHERE id = $2
+    RETURNING *;
+  `;
+  const result = await pool.query(query, [newPlan, restaurantId]);
+  return result.rows[0];
+},
+
 };
+
+
 
 module.exports = Restaurant;
