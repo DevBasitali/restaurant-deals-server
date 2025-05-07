@@ -1,5 +1,7 @@
 const Restaurant = require("../models/restaurantModel");
 
+const validPlans = ['Basic', 'Pro', 'Premium'];
+
 
 exports.createRestaurant = async (req, res) => {
   try {
@@ -102,5 +104,42 @@ exports.deactivateRestaurant = async (req, res) => {
   } catch (err) {
     console.error('Error deactivating restaurant:', err);
     return res.status(500).json({ message: 'Error deactivating restaurant', error: err.message });
+  }
+};
+
+// --subscriptionplan API'
+
+exports.subscribeRestaurant = async (req, res) => {
+  const { newPlan } = req.body;
+  console.log("this is req", req.body);
+
+  const ownerId = req.user.id;
+  console.log("this is ownerId", ownerId);
+
+  const validPlans = ['Basic', 'Pro', 'Premium'];  // Ensure this exists
+
+  try {
+    if (!validPlans.includes(newPlan)) {
+      return res.status(400).json({ message: "Invalid subscription plan selected" });
+    }
+
+    // Find restaurant by owner_id
+    const restaurant = await Restaurant.findByOwner(ownerId);
+    console.log(restaurant);
+
+    if (!restaurant) {
+      return res.status(404).json({ message: "Restaurant not found for this owner" });
+    }
+
+    // Update subscription_plan
+    const updatedRestaurant = await Restaurant.updateSubscriptionPlan(restaurant.id, newPlan);
+
+    res.status(200).json({
+      message: "Subscription plan updated successfully",
+      restaurant: updatedRestaurant,
+    });
+  } catch (error) {
+    console.error('Error updating subscription:', error);
+    res.status(500).json({ message: 'Error updating subscription', error });
   }
 };
