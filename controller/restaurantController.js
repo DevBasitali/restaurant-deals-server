@@ -110,22 +110,17 @@ exports.deactivateRestaurant = async (req, res) => {
 // --subscriptionplan API'
 
 exports.subscribeRestaurant = async (req, res) => {
-  const { newPlan } = req.body;
-  console.log("this is req", req.body);
-
+  const { restaurantId, newPlan } = req.body;
   const ownerId = req.user.id;
-  console.log("this is ownerId", ownerId);
-
-  const validPlans = ['Basic', 'Pro', 'Premium'];  // Ensure this exists
 
   try {
+    // Validate plan
     if (!validPlans.includes(newPlan)) {
       return res.status(400).json({ message: "Invalid subscription plan selected" });
     }
 
-    // Find restaurant by owner_id
-    const restaurant = await Restaurant.findByOwner(ownerId);
-    console.log(restaurant);
+    // Find restaurant by id AND ownerId (to ensure owner is updating his own restaurant)
+    const restaurant = await Restaurant.findByIdAndOwner(restaurantId, ownerId);
 
     if (!restaurant) {
       return res.status(404).json({ message: "Restaurant not found for this owner" });
@@ -143,3 +138,4 @@ exports.subscribeRestaurant = async (req, res) => {
     res.status(500).json({ message: 'Error updating subscription', error });
   }
 };
+

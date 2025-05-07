@@ -13,14 +13,14 @@ const Restaurant = {
     return result.rows[0];
   },
 
-  async updateSubscriptionPlan(id, newPlan) {
+  async updateSubscriptionPlan(restaurantId, newPlan) {
     const query = `
       UPDATE restaurants
       SET subscriptionplan = $1
       WHERE id = $2
       RETURNING *;
     `;
-    const result = await pool.query(query, [newPlan, id]);
+    const result = await pool.query(query, [newPlan, restaurantId]);
     return result.rows[0];
   },
   
@@ -49,6 +49,12 @@ const Restaurant = {
   async findByOwner(owner_id) {
     const query = 'SELECT * FROM restaurants WHERE ownerid = $1';
     const result = await pool.query(query, [owner_id]);
+    return result.rows[0];
+  },
+
+  async findByIdAndOwner(restaurantId, ownerId) {
+    const query = 'SELECT * FROM restaurants WHERE id = $1 AND ownerid = $2';
+    const result = await pool.query(query, [restaurantId, ownerId]);
     return result.rows[0];
   },
   
