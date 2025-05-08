@@ -139,8 +139,6 @@ exports.subscribeRestaurant = async (req, res) => {
   }
 };
 
-// controllers/subscriptionController.js
-
 exports.getCurrentSubscription = async (req, res) => {
   const { restaurantId } = req.params;
   const ownerId = req.user.id;  // from auth middleware
