@@ -1,8 +1,9 @@
 const Restaurant = require("../models/restaurantModel");
+const subscriptionPlans = require('../config/subscriptionPlans');
+
+
 
 const validPlans = ['Basic', 'Pro', 'Premium'];
-
-
 exports.createRestaurant = async (req, res) => {
   try {
     const { name, description, latitude, longitude, address, subscriptionplan } = req.body;
@@ -159,6 +160,38 @@ exports.getCurrentSubscription = async (req, res) => {
   } catch (error) {
     console.error('Error fetching subscription:', error);
     res.status(500).json({ message: 'Error fetching subscription', error });
+  }
+};
+
+exports.listAvailablePlans = (req, res) => {
+  res.status(200).json({
+    plans: subscriptionPlans
+  });
+};
+
+exports.cancelSubscription = async (req, res) => {
+  const { restaurantId } = req.params;
+  const ownerId = req.user.id; // from auth middleware
+
+  try {
+    // Verify restaurant exists and belongs to owner
+    const restaurant = await Restaurant.findByIdAndOwner(restaurantId, ownerId);
+
+    if (!restaurant) {
+      return res.status(404).json({ message: 'Restaurant not found for this owner' });
+    }
+
+    // Set subscription plan to 'Basic'
+    const updatedRestaurant = await Restaurant.updateSubscriptionPlan(restaurant.id, 'Basic');
+
+    res.status(200).json({
+      message: 'Subscription cancelled successfully. Reverted to Basic plan.',
+      restaurant: updatedRestaurant,
+    });
+
+  } catch (error) {
+    console.error('Error cancelling subscription:', error);
+    res.status(500).json({ message: 'Error cancelling subscription', error });
   }
 };
 

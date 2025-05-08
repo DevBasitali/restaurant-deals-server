@@ -10,7 +10,10 @@ router.delete('/deactivate-restaurant/:id', authMiddleware, approvedRestaurantMi
 
 // --subscription Plan routes
 router.post('/subscribe-restaurant', authMiddleware, approvedRestaurantMiddleware, restaurantController.subscribeRestaurant);
-router.get('/restaurants/:restaurantId/current-subscription', authMiddleware, approvedRestaurantMiddleware, restaurantController.getCurrentSubscription);
+router.get('/:restaurantId/current-subscription', authMiddleware, approvedRestaurantMiddleware, restaurantController.getCurrentSubscription);
+router.get('/Available-plans', restaurantController.listAvailablePlans);
+router.post('/:restaurantId/cancel-subscription', authMiddleware, approvedRestaurantMiddleware, restaurantController.cancelSubscription);
+
 
 
 module.exports = router;
