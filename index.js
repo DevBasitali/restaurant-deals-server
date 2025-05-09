@@ -1,5 +1,4 @@
 const express = require("express");
-// import express from "express";
 const dotenv = require("dotenv");
 const userRoutes = require("./routes/usersRoute");
 const adminRoutes = require('./routes/adminRoutes')
@@ -7,12 +6,17 @@ const restaurantRoutes = require('./routes/restaurantRoutes')
 const errorHandler = require("./middleware/errorHandler");
 const pool = require("./db/db");
 const session = require("express-session");
-// import session from "express-session";
+const cors = require('cors');
 
 dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 3000;
+
+app.use(cors({
+  origin: 'http://localhost:3000',  // replace with your Next.js URL
+  credentials: true   // allow cookies/authorization headers if needed
+}));
 
 app.use(express.json());
 pool.connect();
