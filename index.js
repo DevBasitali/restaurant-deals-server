@@ -11,10 +11,12 @@ const cors = require('cors');
 dotenv.config();
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT;
+
 
 app.use(cors({
-  origin: 'http://localhost:3000',  // replace with your Next.js URL
+  origin: 'http://localhost:3000',
+  methods: ['POST', 'GET', 'OPTIONS'],  // replace with your Next.js URL
   credentials: true   // allow cookies/authorization headers if needed
 }));
 
