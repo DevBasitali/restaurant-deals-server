@@ -32,9 +32,9 @@ app.use(
   })
 );
 
-app.use("/auth", userRoutes);
-app.use('/admin', adminRoutes);
-app.use('/restaurant', restaurantRoutes);
+app.use('/api/auth', userRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('/api/restaurant', restaurantRoutes);
 
 app.use(errorHandler);
 
