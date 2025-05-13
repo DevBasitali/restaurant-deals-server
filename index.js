@@ -3,7 +3,7 @@ const dotenv = require("dotenv");
 const userRoutes = require("./routes/usersRoute");
 const adminRoutes = require('./routes/adminRoutes')
 const restaurantRoutes = require('./routes/restaurantRoutes')
-const errorHandler = require("./middleware/errorHandler");
+const {approvedRestaurantMiddleware, adminMiddleware} = require("./middleware");
 const pool = require("./db/db");
 const session = require("express-session");
 const cors = require('cors');
@@ -33,8 +33,8 @@ app.use(
 );
 
 app.use('/api/auth', userRoutes);
-app.use('/api/admin', adminRoutes);
-app.use('/api/restaurant', restaurantRoutes);
+app.use('/api/admin', adminMiddleware, adminRoutes);
+app.use('/api/restaurant', approvedRestaurantMiddleware, restaurantRoutes);
 
 app.use(errorHandler);
 
