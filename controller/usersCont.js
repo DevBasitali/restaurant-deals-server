@@ -51,20 +51,15 @@ exports.loginUser = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    // Fetch user by email
     const user = await User.findByEmail(email);
-    console.log('User:', user);
-
     if (!user) {
       return res.status(404).json({ message: "User not found!!!" });
     }
 
-    // Check if the provided password matches the stored plain password
     if (user.password !== password) {
       return res.status(400).json({ message: "Incorrect password" });
     }
 
-    // 🚨 Add this check only for restaurant_owner role
     if (user.role === 'restaurant_owner') {
       if (user.approvalstatus === 'pending') {
         return res.status(403).json({ message: "Your account is pending approval by admin" });
@@ -75,16 +70,21 @@ exports.loginUser = async (req, res) => {
       }
     }
 
-    // Generate JWT token and include approval status
     const token = jwt.sign(
       { id: user.id, role: user.role, approvalstatus: user.approvalstatus },
       process.env.JWT_SECRET,
       { expiresIn: '1d' }
     );
 
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 24 * 60 * 60 * 1000,
+    });
+
     return res.status(200).json({
       message: "Login successful",
-      token,
       user: {
         id: user.id,
         name: user.name,
@@ -97,4 +97,15 @@ exports.loginUser = async (req, res) => {
     console.error("Error logging in:", error);
     return res.status(500).json({ message: "Error logging in", error });
   }
+};
+
+
+exports.logoutUser = (req, res) => {
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+  });
+
+  return res.status(200).json({ message: "Logged out successfully" });
 };
