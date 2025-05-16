@@ -60,6 +60,7 @@ exports.loginUser = async (req, res) => {
       return res.status(400).json({ message: "Incorrect password" });
     }
 
+    // Only check approval status for restaurant_owner
     if (user.role === 'restaurant_owner') {
       if (user.approvalstatus === 'pending') {
         return res.status(403).json({ message: "Your account is pending approval by admin" });
@@ -70,9 +71,9 @@ exports.loginUser = async (req, res) => {
       }
     }
 
-    if (user.role !== 'restaurant_owner') {
-  return res.status(403).json({ message: "Unauthorized access" });
-}
+    // No need to block others — allow admin and regular users to log in
+    // If you want to block normal users specifically, you can add a check like:
+    // if (user.role === 'user') { return res.status(403).json({ message: "User login not allowed" }); }
 
     const token = jwt.sign(
       { id: user.id, role: user.role, approvalstatus: user.approvalstatus },
@@ -102,6 +103,7 @@ exports.loginUser = async (req, res) => {
     return res.status(500).json({ message: "Error logging in", error });
   }
 };
+
 
 
 exports.logoutUser = (req, res) => {
