@@ -70,6 +70,10 @@ exports.loginUser = async (req, res) => {
       }
     }
 
+    if (user.role !== 'restaurant_owner') {
+  return res.status(403).json({ message: "Unauthorized access" });
+}
+
     const token = jwt.sign(
       { id: user.id, role: user.role, approvalstatus: user.approvalstatus },
       process.env.JWT_SECRET,
