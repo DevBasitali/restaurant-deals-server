@@ -71,10 +71,6 @@ exports.loginUser = async (req, res) => {
       }
     }
 
-    // No need to block others — allow admin and regular users to log in
-    // If you want to block normal users specifically, you can add a check like:
-    // if (user.role === 'user') { return res.status(403).json({ message: "User login not allowed" }); }
-
     const token = jwt.sign(
       { id: user.id, role: user.role, approvalstatus: user.approvalstatus },
       process.env.JWT_SECRET,
