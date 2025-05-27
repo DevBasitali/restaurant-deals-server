@@ -8,7 +8,7 @@ exports.registerUser = async (req, res) => {
 
     // Validate that required fields are present
     if (!name || !email || !password || !role) {
-      return res.status(400).json({ message: "Missing required fields" });
+      return res.status(400).json({ message: "Missing required fields!!" });
     }
 
     // Check if the user already exists
