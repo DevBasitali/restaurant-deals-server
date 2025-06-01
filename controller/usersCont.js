@@ -46,7 +46,6 @@ exports.registerUser = async (req, res) => {
   }
 };
 
-
 exports.loginUser = async (req, res) => {
   const { email, password } = req.body;
 
@@ -74,7 +73,8 @@ exports.loginUser = async (req, res) => {
     const token = jwt.sign(
       { id: user.id, role: user.role, approvalstatus: user.approvalstatus },
       process.env.JWT_SECRET,
-      { expiresIn: '1d' }
+      // { expiresIn: '10s' }
+      { expiresIn: '1h' }
     );
 
     res.cookie("token", token, {
@@ -99,8 +99,6 @@ exports.loginUser = async (req, res) => {
     return res.status(500).json({ message: "Error logging in", error });
   }
 };
-
-
 
 exports.logoutUser = (req, res) => {
   res.clearCookie("token", {
