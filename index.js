@@ -5,8 +5,8 @@ const adminRoutes = require('./routes/adminRoutes')
 const restaurantRoutes = require('./routes/restaurantRoutes')
 const {approvedRestaurantMiddleware, adminMiddleware} = require("./middleware/authMiddleware");
 const pool = require("./db/db");
-const session = require("express-session");
 const cors = require('cors');
+const cookieParser = require("cookie-parser");
 
 dotenv.config();
 
@@ -16,30 +16,21 @@ const port = process.env.PORT;
 
 app.use(cors({
   origin: 'http://localhost:3000',
-  methods: ['POST', 'GET', 'OPTIONS'],  // replace with your Next.js URL
-  credentials: true   // allow cookies/authorization headers if needed
+  methods: ['POST', 'GET', 'OPTIONS'],
+  credentials: true
 }));
+
 
 app.use(express.json());
 pool.connect();
 
-
-app.use(
-  session({
-    secret: process.env.JWT_SECRET,
-    resave: false,
-    saveUninitialized: false,
-  })
-);
+app.use(cookieParser());
 
 app.use('/api/auth', userRoutes);
-app.use('/api/admin', adminMiddleware, adminRoutes);
+app.use('/api/admin', adminRoutes);
 app.use('/api/restaurant', approvedRestaurantMiddleware, restaurantRoutes);
 
-// app.use(errorHandler);
 
-
-// Start the server
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });

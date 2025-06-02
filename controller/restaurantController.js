@@ -1,8 +1,6 @@
 const Restaurant = require("../models/restaurantModel");
 const subscriptionPlans = require('../config/subscriptionPlans');
 
-
-
 const validPlans = ['Basic', 'Pro', 'Premium'];
 exports.createRestaurant = async (req, res) => {
   try {

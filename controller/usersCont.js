@@ -59,41 +59,46 @@ exports.loginUser = async (req, res) => {
       return res.status(400).json({ message: "Incorrect password" });
     }
 
-    // Only check approval status for restaurant_owner
-    if (user.role === 'restaurant_owner') {
-      if (user.approvalstatus === 'pending') {
-        return res.status(403).json({ message: "Your account is pending approval by admin" });
-      } else if (user.approvalstatus === 'rejected') {
-        return res.status(403).json({ message: "Your account has been rejected by admin" });
-      } else if (user.approvalstatus === 'banned') {
-        return res.status(403).json({ message: "Your account has been banned by admin" });
+    if (user.role === "restaurant_owner") {
+      if (user.approvalstatus === "pending") {
+        return res
+          .status(403)
+          .json({ message: "Your account is pending approval by admin" });
+      } else if (user.approvalstatus === "rejected") {
+        return res
+          .status(403)
+          .json({ message: "Your account has been rejected by admin" });
+      } else if (user.approvalstatus === "banned") {
+        return res
+          .status(403)
+          .json({ message: "Your account has been banned by admin" });
       }
     }
 
     const token = jwt.sign(
       { id: user.id, role: user.role, approvalstatus: user.approvalstatus },
       process.env.JWT_SECRET,
-      // { expiresIn: '10s' }
-      { expiresIn: '1h' }
+      // { expiresIn: "1h" }
     );
 
     res.cookie("token", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      maxAge: 24 * 60 * 60 * 1000,
-    });
+  httpOnly: true,
+  secure: false, // set to true only in production with HTTPS
+  sameSite: "lax",
+  maxAge: 60 * 60 * 1000, // 1 hour
+});
 
     return res.status(200).json({
-      message: "Login successful",
-      user: {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-        approvalstatus: user.approvalstatus,
-      },
-    });
+  message: "Login successful",
+  user: {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    role: user.role,
+    approvalstatus: user.approvalstatus,
+  },
+});
+
   } catch (error) {
     console.error("Error logging in:", error);
     return res.status(500).json({ message: "Error logging in", error });

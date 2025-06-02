@@ -2,7 +2,7 @@ const pool = require('../db/db');
 const User = require('../models/userModel');
 
 exports.approveRestaurantOwner = async (req, res) => {
-  const { id } = req.params; // Restaurant owner's user ID from request parameters
+  const { id } = req.params;
 
   try {
     const updatedUser = await User.updateApprovalStatus(id, 'approved');
