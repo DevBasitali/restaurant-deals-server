@@ -5,7 +5,6 @@ const { authMiddleware, adminMiddleware } = require("../middleware/authMiddlewar
 
 router.put('/approve-restaurant/:id', authMiddleware, adminMiddleware, adminController.approveRestaurantOwner);
 
-
 router.put('/reject-restaurant/:id', authMiddleware, adminMiddleware, adminController.rejectRestaurantOwner);
 
 router.post('/ban-restaurant-owner/:id', authMiddleware, adminMiddleware, adminController.banRestaurant_Owner);
