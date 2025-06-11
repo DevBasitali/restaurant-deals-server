@@ -25,14 +25,15 @@ const { Pool } = require('pg');
 
 const pool = new Pool({
   user: 'postgres',
-  password: 'dev_basit01',
-  host: 'deals-db.chsqgq86kwh6.ap-south-1.rds.amazonaws.com',
+  password: 'devbasit2001',
+  // Updated host to new endpoint
+  host: 'foodypanda1.chsqgq86kwh6.ap-south-1.rds.amazonaws.com',
   port: 5432,
-  database: 'deals-db',
+  // Updated database name
+  database: 'foodypanda1',
   ssl: {
     rejectUnauthorized: false
   },
-  // Added timeout and retry settings
   connectionTimeoutMillis: 10000,
   max: 20,
   idleTimeoutMillis: 30000,
@@ -41,7 +42,7 @@ const pool = new Pool({
 
 // Add better error logging
 pool.on('connect', () => {
-  console.log('Database connected successfully');
+  console.log('Database connected successfully to foodypanda1');
 });
 
 pool.on('error', (err) => {
