@@ -61,23 +61,6 @@ exports.unbanRestaurant_Owner = async (req, res) => {
   }
 };
 
-exports.getPendingRestaurantOwners = async (req, res) => {
-  try {
-    const query = 'SELECT * FROM users WHERE role = $1 AND approvalstatus = $2';
-    const values = ['restaurant_owner', 'pending'];
-    const result = await pool.query(query, values);
-
-    if (result.rows.length === 0) {
-      return res.status(404).json({ message: "No pending restaurant owners found" });
-    }
-
-    return res.status(200).json({ message: "Pending restaurant owners fetched successfully", users: result.rows });
-  } catch (error) {
-    console.error("Error fetching pending restaurant owners:", error);
-    return res.status(500).json({ message: "Error fetching pending restaurant owners", error });
-  }
-};
-
 exports.getApprovedRestaurantOwners = async (req, res) => {
   try {
     const query = `SELECT * FROM users WHERE role = 'restaurant_owner' AND approvalstatus = 'approved'`;
@@ -104,5 +87,22 @@ exports.getRejectedRestaurantOwners = async (req, res) => {
   } catch (error) {
     console.error("Error fetching rejected restaurant owners:", error);
     return res.status(500).json({ message: "Error fetching rejected restaurant owners", error });
+  }
+};
+
+exports.getPendingRestaurantOwners = async (req, res) => {
+  try {
+    const query = 'SELECT * FROM users WHERE role = $1 AND approvalstatus = $2';
+    const values = ['restaurant_owner', 'pending'];
+    const result = await pool.query(query, values);
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: "No pending restaurant owners found" });
+    }
+
+    return res.status(200).json({ message: "Pending restaurant owners fetched successfully", users: result.rows });
+  } catch (error) {
+    console.error("Error fetching pending restaurant owners:", error);
+    return res.status(500).json({ message: "Error fetching pending restaurant owners", error });
   }
 };
